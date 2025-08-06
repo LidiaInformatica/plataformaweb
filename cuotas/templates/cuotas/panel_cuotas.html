@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal de Cuotas</title>
+    <link rel="stylesheet" href="{% static 'css/cuotas.css' %}">
+</head>
+<body>
+    <header>
+        <h2>Sistema de Gestión de Cuotas</h2>
+        <h3>Colegio Adventista Talcahuano Centro</h3>
+        <nav>
+            <a href="{% url 'cuotas:panel_cuotas' %}">Panel Principal</a> |
+            <a href="{% url 'cuotas:registrar_pago' %}">Registrar Cuotas</a> |
+            <a href="{% url 'cuotas:estado_pagos' %}">Estado de Pagos</a> |
+            <a href="{% url 'actividades:lista_actividades' %}">Actividades</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h3>Resumen General</h3>
+            <div class="metricas">
+                <div class="card">
+                    <h4>Total Recaudado</h4>
+                    <p><strong>${{ total_recaudado|floatformat:0 }}</strong></p>
+                </div>
+                <div class="card">
+                    <h4>Pagos Pendientes</h4>
+                    <p><strong>{{ pagos_pendientes }}</strong></p>
+                </div>
+                <div class="card">
+                    <h4>Cuotas Registradas</h4>
+                    <p><strong>{{ total_cuotas }}</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Últimos Pagos Registrados</h3>
+            {% if ultimos_pagos %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Actividad</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pago in ultimos_pagos %}
+                            <tr>
+                                <td>{{ pago.estudiante }}</td>
+                                <td>{{ pago.actividad.nombre }}</td>
+                                <td>${{ pago.monto_pagado|floatformat:0 }}</td>
+                                <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                                <td>{{ pago.estado_pago }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay pagos registrados recientemente.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis pagos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #eaeaea;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Mis pagos</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Actividad</th>
+                <th>Monto</th>
+                <th>Estado de pago</th>
+                <th>Fecha de pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+            <tr>
+                <td>{{ pago.estudiante.nombre }}</td>
+                <td>{{ pago.actividad.nombre }}</td>
+                <td>${{ pago.monto|floatformat:0 }}</td>
+                <td>{{ pago.estado_pago|title }}</td>
+                <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay pagos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'cuotas:registrar_pago' %}" class="btn">Registrar nuevo pago</a>
+</body>
+</html>

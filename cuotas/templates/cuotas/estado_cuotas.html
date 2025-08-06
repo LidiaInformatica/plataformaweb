@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estado de Pagos</title>
+</head>
+<body>
+    <header>
+        <h2>Estado de Pagos</h2>
+        <nav>
+            <a href="{% url 'cuotas:panel_cuotas' %}">Panel de Cuotas</a> |
+            <a href="{% url 'cuotas:registrar_pago' %}">Registrar Pago</a>
+        </nav>
+    </header>
+    <main>
+        <h3>Listado de Pagos Registrados</h3>
+        {% if pagos %}
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Estudiante</th>
+                    <th>Actividad</th>
+                    <th>Monto Total</th>
+                    <th>Monto Pagado</th>
+                    <th>Saldo Pendiente</th>
+                    <th>Fecha de Pago</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cuota in pagos %}
+                <tr>
+                    <td>{{ cuota.estudiante.nombre }}</td>
+                    <td>{{ cuota.actividad.nombre }}</td>
+                    <td>${{ cuota.actividad.monto_total|floatformat:0|intcomma }}</td>
+                    <td>${{ cuota.monto_pagado|floatformat:0|intcomma }}</td>
+                    <td>${{ cuota.saldo_pendiente|floatformat:0|intcomma }}</td>
+                    <td>{{ cuota.fecha_pago }}</td>
+                    <td>{{ cuota.estado_pago }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay pagos registrados.</p>
+        {% endif %}
+    </main>
+</body>
+</html>
+

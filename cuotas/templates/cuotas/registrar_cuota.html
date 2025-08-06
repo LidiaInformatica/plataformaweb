@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Cuotas</title>
+    <link rel="stylesheet" href="{% static 'css/cuotas.css' %}">
+    <style>
+        .success-message {
+            background-color: #e6ffe6;
+            border: 1px solid green;
+            padding: 10px;
+            font-weight: bold;
+            color: green;
+            margin-bottom: 15px;
+        }
+        .error-block {
+            background-color: #ffe6e6;
+            border: 1px solid red;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        // Ocultar mensaje de éxito después de 4 segundos
+        document.addEventListener('DOMContentLoaded', () => {
+            const successMsg = document.querySelector('.success-message');
+            if (successMsg) {
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 4000);
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h2>Sistema de Gestión de Cuotas</h2>
+        <h3>Colegio Adventista Talcahuano Centro</h3>
+        <nav>
+            <a href="{% url 'cuotas:panel_cuotas' %}">Panel Principal</a>
+            <a href="{% url 'cuotas:registrar_pago' %}">Registrar Cuotas</a>
+            <a href="{% url 'cuotas:estado_pagos' %}">Estado de Pagos</a>
+            <a href="{% url 'actividades:lista_actividades' %}">Actividades</a>
+        </nav>
+    </header>
+
+    <main>
+        <h3>Formulario de Registro de Cuotas</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="error-block">
+                    <strong>Por favor corrige los siguientes errores:</strong>
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if mensaje_exito %}
+                <div class="success-message">
+                    ¡Pago registrado correctamente!
+                </div>
+            {% endif %}
+
+            <fieldset>
+                <legend>Datos del estudiante</legend>
+                <label for="{{ form.estudiante.id_for_label }}">Estudiante:</label>
+                {{ form.estudiante }}
+
+                <label for="{{ form.apoderado.id_for_label }}">Apoderado:</label>
+                {{ form.apoderado }}
+            </fieldset>
+
+            <fieldset>
+                <legend>Información del pago</legend>
+                <label for="{{ form.actividad.id_for_label }}">Actividad:</label>
+                {{ form.actividad }}
+
+                <label for="{{ form.monto_pagado.id_for_label }}">Monto Pagado:</label>
+                {{ form.monto_pagado }}
+
+                {% if saldo_pendiente is not None %}
+                    <p><strong>Saldo Pendiente:</strong> ${{ saldo_pendiente }}</p>
+                {% endif %}
+
+                <label for="{{ form.metodo_pago.id_for_label }}">Método de Pago:</label>
+                {{ form.metodo_pago }}
+
+                <label for="{{ form.estado_pago.id_for_label }}">Estado del Pago:</label>
+                {{ form.estado_pago }}
+
+                <label for="{{ form.fecha_pago.id_for_label }}">Fecha de Pago:</label>
+                {{ form.fecha_pago }}
+
+                <label for="{{ form.observacion.id_for_label }}">Observación:</label>
+                {{ form.observacion }}
+            </fieldset>
+
+            <button type="submit">Registrar Pago</button>
+            <button type="reset">Limpiar Formulario</button>
+        </form>
+    </main>
+</body>
+</html>

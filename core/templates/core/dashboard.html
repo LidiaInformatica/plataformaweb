@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Sistema de Gestión de Cuotas</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <header>
+        <h2>Sistema de Gestión de Cuotas Colegio Adventista Talcahuano Centro</h2>
+        <div class="session-info">
+            Sesión activa como Directiva |
+            <a href="#">Configuración</a> |
+            <a href="#">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="resumen">
+            <h3>Resumen mensual visual</h3>
+            <ul>
+                <li>💰 Recaudado este mes: ${{ recaudado|intcomma }}</li>
+                <li>📌 Cuotas pendientes: {{ pendientes }}</li>
+                <li>👨‍🎓 Alumnos registrados: {{ alumnos }}</li>
+            </ul>
+        </section>
+
+        <section class="actividades">
+            <h3>Actividades en Curso y Próximas</h3>
+            <ul>
+                {% for actividad in actividades %}
+                    <li>
+                        {{ actividad.nombre }} - Fecha: {{ actividad.fecha }} -
+                        Estado: {{ actividad.estado }} - Pagado: {{ actividad.porcentaje_pagado }}%
+                    </li>
+                {% empty %}
+                    <li>No hay actividades próximas.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="avisos">
+            <h3>Avisos importantes / Planificación Anual</h3>
+            <ul>
+                <li>Próxima cuota Fin de Año vence el 15 octubre</li>
+                <li>Reunión de directiva agendada para el 20/10</li>
+                <li>Encuesta a apoderados disponible hasta 5 noviembre</li>
+            </ul>
+        </section>
+
+        <section class="pagos-recientes">
+            <h3>Pagos registrados recientemente</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Actividad</th>
+                        <th>Curso</th>
+                        <th>Monto Pagado</th>
+                        <th>Monto Pendiente</th>
+                        <th>Estado</th>
+                        <th>Fecha de Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pago in pagos_recientes %}
+                    <tr>
+                        <td>{{ pago.estudiante.nombre }}</td>
+                        <td>{{ pago.actividad.nombre }}</td>
+                        <td>{{ pago.estudiante.curso }}</td>
+                        <td>${{ pago.monto_pagado|intcomma }}</td>
+                        <td>${{ pago.monto_pendiente|intcomma }}</td>
+                        <td>{{ pago.estado }}</td>
+                        <td>{{ pago.fecha_pago }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7">No hay pagos recientes.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
